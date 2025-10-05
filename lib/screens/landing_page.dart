@@ -57,12 +57,7 @@ class _LandingPageState extends State<LandingPage> with TickerProviderStateMixin
       });
     });
 
-    // Navigate to splash screen after animations
-    Future.delayed(const Duration(seconds: 4), () {
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/splash');
-      }
-    });
+    // No automatic navigation
   }
 
   @override
@@ -150,15 +145,54 @@ class _LandingPageState extends State<LandingPage> with TickerProviderStateMixin
                   ),
                 ),
               ),
-              const SizedBox(height: 100),
-              // Loading indicator
+              const SizedBox(height: 60),
+              // Action Buttons
               FadeTransition(
                 opacity: _fadeAnimation,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.white.withOpacity(0.7),
-                  ),
-                  strokeWidth: 2,
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/splash');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.red.shade900,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: const Text(
+                        'Report Anonymously',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    OutlinedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white, width: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: const Text(
+                        'Login as Admin/Substation',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

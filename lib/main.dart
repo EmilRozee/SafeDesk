@@ -6,6 +6,7 @@ import 'screens/submit_report_screen.dart';
 import 'screens/confirmation_screen.dart';
 import 'screens/track_report_screen.dart';
 import 'screens/about_screen.dart';
+import 'screens/auth/login_screen.dart';
 
 void main() {
   runApp(const SafeDeskApp());
@@ -48,6 +49,7 @@ class SafeDeskApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const LandingPage(),
+        '/login': (context) => const LoginScreen(),
         '/splash': (context) => const SplashScreen(),
         '/home': (context) => const HomeScreen(),
         '/submit': (context) => const SubmitReportScreen(),
