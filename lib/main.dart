@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/landing_page.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/submit_report_screen.dart';
@@ -20,17 +21,34 @@ class SafeDeskApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
+          seedColor: Colors.red,
           brightness: Brightness.light,
+        ).copyWith(
+          primary: Colors.red.shade800,
+          secondary: Colors.pink.shade300,
         ),
         useMaterial3: true,
-        appBarTheme: const AppBarTheme(
+        appBarTheme: AppBarTheme(
           centerTitle: true,
+          backgroundColor: Colors.red.shade800,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red.shade800,
+            foregroundColor: Colors.white,
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
         ),
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const SplashScreen(),
+        '/': (context) => const LandingPage(),
+        '/splash': (context) => const SplashScreen(),
         '/home': (context) => const HomeScreen(),
         '/submit': (context) => const SubmitReportScreen(),
         '/confirmation': (context) => const ConfirmationScreen(),
