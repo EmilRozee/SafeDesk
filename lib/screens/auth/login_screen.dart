@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../admin/control_room_dashboard.dart';
 import '../substation/substation_dashboard.dart';
@@ -18,12 +19,29 @@ class _LoginScreenState extends State<LoginScreen> {
   UserRole _selectedRole = UserRole.controlRoom; // Default role
   bool _isLoading = false;
   bool _obscurePassword = true;
+  final _captchaController = TextEditingController();
+  String _captchaCode = '';
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+    _captchaController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _generateCaptcha();
+  }
+
+  void _generateCaptcha() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // omit ambiguous chars
+    final rnd = Random.secure();
+    _captchaCode = List.generate(6, (_) => chars[rnd.nextInt(chars.length)]).join();
+    _captchaController.clear();
+    if (mounted) setState(() {});
   }
 
   Future<void> _handleLogin() async {
@@ -34,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
+      // CAPTCHA already validated by form validator; proceed to login
       final user = await AuthService.login(
         _usernameController.text,
         _passwordController.text,
@@ -176,6 +195,59 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    // CAPTCHA Display and Input
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey.shade400),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _captchaCode,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    letterSpacing: 2,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: _generateCaptcha,
+                                  icon: const Icon(Icons.refresh),
+                                  tooltip: 'Refresh CAPTCHA',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _captchaController,
+                      decoration: const InputDecoration(
+                        labelText: 'Enter CAPTCHA',
+                        prefixIcon: Icon(Icons.verified_user),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the CAPTCHA';
+                        }
+                        if (value.trim().toUpperCase() != _captchaCode) {
+                          _generateCaptcha();
+                          return 'CAPTCHA does not match';
                         }
                         return null;
                       },
